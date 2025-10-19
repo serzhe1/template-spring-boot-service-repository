@@ -11,6 +11,16 @@ apply from: "${rootDir}/gradle/quality/checkstyle.gradle"
 apply from: "$rootDir/gradle/quality/spotless.gradle"
 apply from: "$rootDir/gradle/quality/jacoco.gradle"
 
+tasks.named("check") {
+    dependsOn(
+            tasks.named("test"),
+            tasks.named("jacocoTestReport"),
+            tasks.named("jacocoTestCoverageVerification"),
+            tasks.named("checkstyleMain"),
+            tasks.named("checkstyleTest")
+    )
+}
+
 group = 'org'
 version = '0.0.1-SNAPSHOT'
 

@@ -20,6 +20,7 @@ tasks.named("jacocoTestReport", JacocoReport).configure {
 
     def mainOutput = sourceSets.main.output
 
+    // исключаем сгенерённый код и bootstrapping-класс приложения
     def filtered = files(
             fileTree(dir: mainOutput.classesDirs.singleFile, exclude: [
                     '**/generated/**',
@@ -28,8 +29,33 @@ tasks.named("jacocoTestReport", JacocoReport).configure {
     )
 
     classDirectories.setFrom(filtered)
-
     sourceDirectories.setFrom(sourceSets.main.allSource.srcDirs)
 
     executionData.setFrom(fileTree(rootProject.layout.buildDirectory).include("jacoco/test.exec"))
+}
+
+tasks.named("jacocoTestCoverageVerification", JacocoCoverageVerification).configure {
+    dependsOn(tasks.named("test"))
+
+    def mainOutput = sourceSets.main.output
+    def filtered = files(
+            fileTree(dir: mainOutput.classesDirs.singleFile, exclude: [
+                    '**/generated/**',
+                    '**/*Application*'
+            ])
+    )
+    classDirectories.setFrom(filtered)
+    sourceDirectories.setFrom(sourceSets.main.allSource.srcDirs)
+    executionData.setFrom(fileTree(rootProject.layout.buildDirectory).include("jacoco/test.exec"))
+
+    violationRules {
+        rule {
+            element = 'BUNDLE'
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.60
+            }
+        }
+    }
 }
