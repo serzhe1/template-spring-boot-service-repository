@@ -1,0 +1,23 @@
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = checkstyleVersion
+
+    config = resources.text.fromFile("gradle/quality/config/checkstyle/checkstyle.xml")
+
+    configProperties = [
+            'checkstyle.cache.file': rootProject.layout.buildDirectory
+                    .file("checkstyle/checkstyle.cache").get().asFile
+    ]
+}
+
+tasks.withType(Checkstyle).configureEach {
+    configDirectory.set(
+            rootProject.layout.projectDirectory.dir("gradle/quality/config/checkstyle")
+    )
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}

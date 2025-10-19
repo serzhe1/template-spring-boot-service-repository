@@ -1,0 +1,11 @@
+apply plugin: 'com.diffplug.spotless'
+
+spotless {
+    java {
+        palantirJavaFormat('2.80.0').formatJavadoc(true)
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+        target 'src/**/*.java'
+    }
+}
