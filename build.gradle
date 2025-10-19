@@ -9,6 +9,7 @@ plugins {
 
 apply from: "${rootDir}/gradle/quality/checkstyle.gradle"
 apply from: "$rootDir/gradle/quality/spotless.gradle"
+apply from: "$rootDir/gradle/quality/jacoco.gradle"
 
 group = 'org'
 version = '0.0.1-SNAPSHOT'

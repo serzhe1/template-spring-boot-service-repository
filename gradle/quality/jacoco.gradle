@@ -1,0 +1,35 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.13'
+}
+
+tasks.named("test") {
+    useJUnitPlatform()
+    finalizedBy(tasks.named("jacocoTestReport"))
+}
+
+tasks.named("jacocoTestReport", JacocoReport).configure {
+    dependsOn(tasks.named("test"))
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+
+    def mainOutput = sourceSets.main.output
+
+    def filtered = files(
+            fileTree(dir: mainOutput.classesDirs.singleFile, exclude: [
+                    '**/generated/**',
+                    '**/*Application*'
+            ])
+    )
+
+    classDirectories.setFrom(filtered)
+
+    sourceDirectories.setFrom(sourceSets.main.allSource.srcDirs)
+
+    executionData.setFrom(fileTree(rootProject.layout.buildDirectory).include("jacoco/test.exec"))
+}
