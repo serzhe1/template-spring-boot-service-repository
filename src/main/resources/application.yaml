@@ -1,1 +1,3 @@
-spring.application.name=template-spring-boot-service-repository
+spring:
+  application:
+    name: template-spring-boot-service-repository
